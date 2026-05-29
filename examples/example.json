@@ -1,0 +1,17 @@
+{
+  "property": {
+    "id": "prop:boot-image-integrity"
+  },
+  "measurement": [
+    { "RawEv": ["YmFzZTY0ZXZpZGVuY2U="] },
+    {
+      "EvidenceT_CONSTRUCTOR": "asp_evt",
+      "EvidenceT_BODY": [
+        "P0",
+        { "ASP_ID": "hashfile", "ASP_ARGS": { "path": "/boot/vmlinuz" } },
+        { "EvidenceT_CONSTRUCTOR": "mt_evt" }
+      ]
+    }
+  ],
+  "justification": true
+}

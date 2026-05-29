@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ku-sldg.github.io/lifecycle-json-schema/schema/lifecycle.schema.json",
+  "title": "PropertyMeasurementJustification",
+  "description": "A claim pairing an abstract Property with a Copland Evidence Measurement and a Justification.",
+  "type": "object",
+  "properties": {
+    "property":      { "$ref": "#/$defs/property" },
+    "measurement":   { "$ref": "#/$defs/evidence" },
+    "justification": { "$ref": "#/$defs/justification" }
+  },
+  "required": ["property", "measurement", "justification"],
+
+  "$defs": {
+    "property": {
+      "type": "object",
+      "description": "Abstract property under consideration. Currently just a unique identifier.",
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }
+      },
+      "required": ["id"]
+    },
+
+    "justification": {
+      "type": "boolean",
+      "description": "Whether the measurement justifies the property. Placeholder; to be expanded."
+    },
+
+    "evidence": {
+      "description": "Copland Evidence: tuple (RawEv, EvidenceT). See https://github.com/ku-sldg/rust-am-lib/blob/main/src/copland.rs",
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/rawEv" },
+        { "$ref": "#/$defs/evidenceT" }
+      ],
+      "items": false,
+      "minItems": 2
+    },
+
+    "rawEv": {
+      "description": "RawEv newtype enum, default serde external tagging: { \"RawEv\": [ base64 strings ] }.",
+      "type": "object",
+      "properties": {
+        "RawEv": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["RawEv"]
+    },
+
+    "aspParams": {
+      "type": "object",
+      "description": "ASP_PARAMS: { ASP_ID, ASP_ARGS }.",
+      "properties": {
+        "ASP_ID":   { "type": "string" },
+        "ASP_ARGS": true
+      },
+      "required": ["ASP_ID", "ASP_ARGS"]
+    },
+
+    "evidenceT": {
+      "description": "Adjacently-tagged recursive EvidenceT enum.",
+      "type": "object",
+      "required": ["EvidenceT_CONSTRUCTOR"],
+      "oneOf": [
+        {
+          "title": "mt_evt",
+          "properties": { "EvidenceT_CONSTRUCTOR": { "const": "mt_evt" } },
+          "required": ["EvidenceT_CONSTRUCTOR"]
+        },
+        {
+          "title": "nonce_evt",
+          "properties": {
+            "EvidenceT_CONSTRUCTOR": { "const": "nonce_evt" },
+            "EvidenceT_BODY": { "type": "string", "description": "N_ID" }
+          },
+          "required": ["EvidenceT_CONSTRUCTOR", "EvidenceT_BODY"]
+        },
+        {
+          "title": "asp_evt",
+          "properties": {
+            "EvidenceT_CONSTRUCTOR": { "const": "asp_evt" },
+            "EvidenceT_BODY": {
+              "type": "array",
+              "prefixItems": [
+                { "type": "string", "description": "Plc" },
+                { "$ref": "#/$defs/aspParams" },
+                { "$ref": "#/$defs/evidenceT" }
+              ],
+              "items": false,
+              "minItems": 3
+            }
+          },
+          "required": ["EvidenceT_CONSTRUCTOR", "EvidenceT_BODY"]
+        },
+        {
+          "title": "left_evt",
+          "properties": {
+            "EvidenceT_CONSTRUCTOR": { "const": "left_evt" },
+            "EvidenceT_BODY": { "$ref": "#/$defs/evidenceT" }
+          },
+          "required": ["EvidenceT_CONSTRUCTOR", "EvidenceT_BODY"]
+        },
+        {
+          "title": "right_evt",
+          "properties": {
+            "EvidenceT_CONSTRUCTOR": { "const": "right_evt" },
+            "EvidenceT_BODY": { "$ref": "#/$defs/evidenceT" }
+          },
+          "required": ["EvidenceT_CONSTRUCTOR", "EvidenceT_BODY"]
+        },
+        {
+          "title": "split_evt",
+          "properties": {
+            "EvidenceT_CONSTRUCTOR": { "const": "split_evt" },
+            "EvidenceT_BODY": {
+              "type": "array",
+              "prefixItems": [
+                { "$ref": "#/$defs/evidenceT" },
+                { "$ref": "#/$defs/evidenceT" }
+              ],
+              "items": false,
+              "minItems": 2
+            }
+          },
+          "required": ["EvidenceT_CONSTRUCTOR", "EvidenceT_BODY"]
+        }
+      ]
+    }
+  }
+}

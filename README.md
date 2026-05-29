@@ -8,7 +8,9 @@ lifecycle data structure built around three components:
 - **Measurement** — a [Copland](https://github.com/ku-sldg/rust-am-lib) `Evidence`
   bundle: the tuple `(RawEv, EvidenceT)` as defined in
   [`copland.rs`](https://github.com/ku-sldg/rust-am-lib/blob/main/src/copland.rs).
-- **Justification** — currently a simple boolean placeholder; to be expanded.
+- **Justification** — an object with a required boolean `verdict` (the overall
+  judgment) and an optional `appraisal_summary` carrying the structured per-target
+  appraisal detail (the `rust-am-lib` `AppraisalSummary`).
 
 ## Layout
 
@@ -28,9 +30,29 @@ Between them, the CVM examples exercise every `EvidenceT` variant: `mt_evt`,
 {
   "property":      { "id": "<string>" },
   "measurement":   [ <RawEv>, <EvidenceT> ],   // Copland Evidence tuple
-  "justification": <boolean>
+  "justification": {
+    "verdict": <boolean>,                       // authoritative overall judgment
+    "appraisal_summary": {                      // optional; rust-am-lib AppraisalSummary
+      "<asp_id>": {
+        "<targ_id>": { "meta": "<string>", "result": <boolean> }
+      }
+    }
+  }
 }
 ```
+
+### Justification
+
+`verdict` is the authoritative overall judgment. `appraisal_summary` is optional
+and mirrors `rust-am-lib`'s
+`AppraisalSummary = HashMap<ASP_ID, HashMap<TARG_ID, AppSummReportValue>>`, where
+`AppSummReportValue` is `{ meta: String, result: bool }`. When a summary is
+present, `verdict` *should* equal the conjunction of all `result` values unless a
+documented policy/override applies — keeping the boolean gives an at-a-glance
+verdict and a place for an override without traversing the map. The
+`appraisal_summary` in [`cvm_dual_hashfile_sig_appr.json`](examples/cvm_dual_hashfile_sig_appr.json)
+was generated from the CVM's own appraisal output (`sig_appr` + `goldenbytes_appr`,
+all PASS).
 
 ### Copland Evidence encoding
 

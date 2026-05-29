@@ -22,8 +22,32 @@
     },
 
     "justification": {
-      "type": "boolean",
-      "description": "Whether the measurement justifies the property. Placeholder; to be expanded."
+      "type": "object",
+      "description": "Why the measurement justifies the property. `verdict` is the authoritative overall judgment; `appraisal_summary` (optional) is the structured per-target appraisal detail from the CVM. When present, `verdict` SHOULD equal the conjunction of all `result` values in the summary unless a documented policy/override applies.",
+      "properties": {
+        "verdict": { "type": "boolean" },
+        "appraisal_summary": { "$ref": "#/$defs/appraisalSummary" }
+      },
+      "required": ["verdict"]
+    },
+
+    "appraisalSummary": {
+      "description": "rust-am-lib AppraisalSummary: HashMap<ASP_ID, HashMap<TARG_ID, AppSummReportValue>>. Outer key = appraiser ASP_ID, inner key = TARG_ID.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/$defs/appSummReportValue" }
+      }
+    },
+
+    "appSummReportValue": {
+      "description": "rust-am-lib AppSummReportValue: a per-target appraisal report.",
+      "type": "object",
+      "properties": {
+        "meta":   { "type": "string" },
+        "result": { "type": "boolean" }
+      },
+      "required": ["meta", "result"]
     },
 
     "evidence": {

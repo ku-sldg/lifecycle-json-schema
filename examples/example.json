@@ -13,5 +13,7 @@
       ]
     }
   ],
-  "justification": true
+  "justification": {
+    "verdict": true
+  }
 }

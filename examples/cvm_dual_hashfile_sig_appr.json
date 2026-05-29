@@ -216,5 +216,16 @@
       ]
     }
   ],
-  "justification": true
+  "justification": {
+    "verdict": true,
+    "appraisal_summary": {
+      "sig_appr": {
+        "sig_targ": { "meta": "RSA signature", "result": true }
+      },
+      "goldenbytes_appr": {
+        "file1_targ": { "meta": "File hash: file1.txt", "result": true },
+        "file2_targ": { "meta": "File hash: file2.txt", "result": true }
+      }
+    }
+  }
 }

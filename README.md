@@ -13,7 +13,9 @@ lifecycle data structure built around three components:
 ## Layout
 
 - [`schema/lifecycle.schema.json`](schema/lifecycle.schema.json) — the schema.
-- [`examples/example.json`](examples/example.json) — a valid instance.
+- [`examples/example.json`](examples/example.json) — a hand-written valid instance.
+- [`examples/cvm_single_hashfile.json`](examples/cvm_single_hashfile.json) — **real CVM output**: a single `hashfile` measurement (`asp_evt` over `mt_evt`).
+- [`examples/cvm_dual_hashfile_sig.json`](examples/cvm_dual_hashfile_sig.json) — **real CVM output**: two parallel `hashfile` measurements combined under `split_evt`, then signed (`sig`).
 
 ## Structure
 
@@ -36,10 +38,11 @@ lifecycle data structure built around three components:
   variants `mt_evt` (no body), `nonce_evt`, `asp_evt`, `left_evt`, `right_evt`,
   and `split_evt`.
 
-> **Note / to confirm:** the `RawEv` wire form (`{ "RawEv": [...] }` vs. a bare
-> array `[...]`) follows serde's default for the enum as currently written in
-> `copland.rs`, where the tagging attributes are commented out. Worth confirming
-> against a real serialized sample.
+> **Confirmed against CVM.** The `RawEv` wire form is `{ "RawEv": [ "<base64>", ... ] }`.
+> This was verified by running protocols through the [CVM](https://github.com/ku-sldg/cvm)
+> and feeding the raw `Evidence` payload (the `PAYLOAD` of a `RUN` response) straight
+> into this schema — see the `cvm_*.json` examples, which are unmodified CVM output
+> wrapped in the Property/Measurement/Justification envelope.
 
 ## Validating
 
@@ -49,7 +52,15 @@ Using [`ajv`](https://ajv.js.org/) (2020-12 dialect):
 npx ajv-cli validate -s schema/lifecycle.schema.json -d examples/example.json --spec=draft2020
 ```
 
+## CVM compatibility
+
+The `measurement` component accepts the raw `Evidence` payload emitted by the
+[CVM](https://github.com/ku-sldg/cvm) verbatim — no transformation needed. To
+produce a `measurement` value, take the `PAYLOAD` array from a successful CVM
+`RUN` response and drop it in. The two `cvm_*.json` examples were generated this
+way and validate against the schema.
+
 ## Status
 
 First draft. Property and Justification are intentionally minimal and will be
-extended.
+extended. Measurement is CVM-verified.

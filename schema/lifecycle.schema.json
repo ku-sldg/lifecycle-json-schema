@@ -70,7 +70,11 @@
           "title": "nonce_evt",
           "properties": {
             "EvidenceT_CONSTRUCTOR": { "const": "nonce_evt" },
-            "EvidenceT_BODY": { "type": "string", "description": "N_ID" }
+            "EvidenceT_BODY": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "N_ID. The CVM wire format encodes this as a nat (non-negative integer). Note: rust-am-lib aliases N_ID = String, but the running CVM rejects a string here and requires a number."
+            }
           },
           "required": ["EvidenceT_CONSTRUCTOR", "EvidenceT_BODY"]
         },

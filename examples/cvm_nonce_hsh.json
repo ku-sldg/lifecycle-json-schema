@@ -1,0 +1,28 @@
+{
+  "property": {
+    "id": "prop:nonce-freshness"
+  },
+  "measurement": [
+    {
+      "RawEv": [
+        "fxGXD7oAIeU84JhzJs2rsLmR7qawovYLOQF0MdQg+vQ=",
+        "bm9uY2UtYnl0ZXMtMTIzNDU2"
+      ]
+    },
+    {
+      "EvidenceT_CONSTRUCTOR": "asp_evt",
+      "EvidenceT_BODY": [
+        "P0",
+        {
+          "ASP_ID": "hsh",
+          "ASP_ARGS": {}
+        },
+        {
+          "EvidenceT_CONSTRUCTOR": "nonce_evt",
+          "EvidenceT_BODY": 0
+        }
+      ]
+    }
+  ],
+  "justification": true
+}

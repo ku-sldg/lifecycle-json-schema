@@ -16,7 +16,7 @@ lifecycle data structure built around three components:
 - [`examples/example.json`](examples/example.json) — a hand-written valid instance.
 - [`examples/cvm_single_hashfile.json`](examples/cvm_single_hashfile.json) — **real CVM output**: a single `hashfile` measurement (`asp_evt` over `mt_evt`).
 - [`examples/cvm_dual_hashfile_sig.json`](examples/cvm_dual_hashfile_sig.json) — **real CVM output**: two parallel `hashfile` measurements combined under `split_evt`, then signed (`sig`).
-- [`examples/cvm_nonce_hsh.json`](examples/cvm_nonce_hsh.json) — **real CVM output**: a nonce-seeded session hashed with `hsh` (`asp_evt` over `nonce_evt`).
+- [`examples/cvm_nonce_hsh.json`](examples/cvm_nonce_hsh.json) — **real CVM output**: a nonce-seeded session hashed with `hsh` (`asp_evt` over `nonce_evt`). There is no Copland term that *generates* a nonce; the `nonce_evt` was hand-constructed and supplied as the request's initial `EVIDENCE` input (as a requester/appraiser would seed a fresh nonce), then the CVM carried it through `hsh`.
 - [`examples/cvm_dual_hashfile_sig_appr.json`](examples/cvm_dual_hashfile_sig_appr.json) — **real CVM output**: the full dual-hashfile + sign protocol *with appraisal* (`APPR`), whose result evidence wraps each branch in `left_evt` / `right_evt`.
 
 Between them, the CVM examples exercise every `EvidenceT` variant: `mt_evt`,
